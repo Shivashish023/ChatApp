@@ -18,7 +18,7 @@ function SendInput() {
       return; // Exit the function if no user is selected
     }
    try{
-    const res=await axios.post(`http://localhost:3000/api/message/send/${selectedUser?._id}`,{message},
+    const res=await axios.post(`https://chat-app-y4o3.vercel.app/api/message/send/${selectedUser?._id}`,{message},
       {
         withCredentials:true,
       });

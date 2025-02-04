@@ -12,7 +12,7 @@ function useGetMessages() {
      
   try{
     axios.defaults.withCredentials=true;
-    const res= await axios.get(`http://localhost:3000/api/message/${selectedUser?._id}`);
+    const res= await axios.get(`https://chat-app-y4o3.vercel.app/api/message/${selectedUser?._id}`);
     console.log(res);
     dispatch(setMessages(res.data))
   }
