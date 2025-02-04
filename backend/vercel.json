@@ -8,33 +8,7 @@
     ],
     "routes": [
       {
-        "src": "/api/send/(.*)",
-        "methods": ["POST"],
-        "dest": "server.js"
-      },
-      {
         "src": "/api/(.*)",
-        "methods": ["GET"],
-        "dest": "server.js"
-      },
-      {
-        "src": "/api/register",
-        "methods": ["POST"],
-        "dest": "server.js"
-      },
-      {
-        "src": "/api/login",
-        "methods": ["POST"],
-        "dest": "server.js"
-      },
-      {
-        "src": "/api/logout",
-        "methods": ["GET"],
-        "dest": "server.js"
-      },
-      {
-        "src": "/api/users",
-        "methods": ["GET"],
         "dest": "server.js"
       }
     ]
