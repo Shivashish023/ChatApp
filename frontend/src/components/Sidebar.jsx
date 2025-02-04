@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import OtherUsers from './otherUsers'
+import OtherUsers from './OtherUsers'
 import {BiSearchAlt2} from "react-icons/bi"
 import axios from 'axios'
 import toast from 'react-hot-toast'
