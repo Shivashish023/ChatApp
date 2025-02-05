@@ -17,7 +17,7 @@ function Login() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/user/login",
+        "https://chat-app-server-six-lac.vercel.app/api/user/login",
         user,
         {
           withCredentials: true,

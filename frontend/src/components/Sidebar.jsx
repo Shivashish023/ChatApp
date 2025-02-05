@@ -24,7 +24,7 @@ const searchSubmitHandler=(e)=>{
 }
   const handleLogout= async()=>{
     try{
-      const res= await axios.get("http://localhost:3000/api/user/logout");
+      const res= await axios.get("https://chat-app-server-six-lac.vercel.app/api/user/logout");
       navigate("/login");
 toast.success(res.data.message);
 dispatch(setAuthUser(null));
