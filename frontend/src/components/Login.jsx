@@ -6,6 +6,7 @@ import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setAuthUser } from "../redux/userSlicer.js";
+import { BASE_URL } from "../main.jsx";
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ function Login() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "https://chat-app-server-six-lac.vercel.app/api/user/login",
+        `${BASE_URL}/api/user/login`,
         user,
         {
           withCredentials: true,

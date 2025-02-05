@@ -3,7 +3,7 @@ import { IoSend } from "react-icons/io5";
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMessages } from '../redux/messageSlice';
-
+import { BASE_URL } from '../main';
 function SendInput() {
   const[message,setMessage]=useState("")
   const dispatch=useDispatch();
@@ -18,7 +18,7 @@ function SendInput() {
       return; // Exit the function if no user is selected
     }
    try{
-    const res=await axios.post(`https://chat-app-server-six-lac.vercel.app/api/message/send/${selectedUser?._id}`,{message},
+    const res=await axios.post(`${BASE_URL}/api/message/send/${selectedUser?._id}`,{message},
       {
         withCredentials:true,
       });

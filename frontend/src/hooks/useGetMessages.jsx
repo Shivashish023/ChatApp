@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import axios from 'axios';
+import { BASE_URL } from '../main';
 import { setMessages } from '../redux/messageSlice';
 function useGetMessages() {
  const{selectedUser}=useSelector(store=>store.user);
@@ -12,7 +13,7 @@ function useGetMessages() {
      
   try{
     axios.defaults.withCredentials=true;
-    const res= await axios.get(`https://chat-app-server-six-lac.vercel.app/api/message/${selectedUser?._id}`);
+    const res= await axios.get(`${BASE_URL}/api/message/${selectedUser?._id}`);
     console.log(res);
     dispatch(setMessages(res.data))
   }

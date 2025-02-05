@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link,useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {toast,Toaster} from 'react-hot-toast';
+import { BASE_URL } from '../main';
 function Register() {
     const navigate=useNavigate();
 const [user, setUser] = useState({
@@ -16,7 +17,7 @@ const handleCheckbox=(gender)=>{
 const handleSubmit= async(e)=>{
     e.preventDefault();
     try{
-        const response=await axios.post("https://chat-app-server-six-lac.vercel.app/api/user/register",user,{
+        const response=await axios.post(`${BASE_URL}/api/user/register`,user,{
             withCredentials:true
         });
       if(response.data.success){

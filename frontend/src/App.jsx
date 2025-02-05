@@ -6,6 +6,7 @@ import Register from "./components/Register.jsx"
 import Home from './components/Home.jsx'
 import Login from './components/Login.jsx'
 import io from "socket.io-client"
+import { BASE_URL } from './main.jsx'
 import {
   RouterProvider,
   createBrowserRouter,
@@ -34,7 +35,7 @@ const dispatch=useDispatch();
 const {socket}=useSelector(store=>store.socket)
  useEffect(() => {
   if(authUser){
-    const socketio=io('https://chat-app-server-six-lac.vercel.app',{
+    const socketio=io(`${BASE_URL}`,{
       query:{
         userId:authUser._id
       }

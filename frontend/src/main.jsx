@@ -8,6 +8,8 @@ import store from './redux/store.js'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 let persistor = persistStore(store)
+export const BASE_URL="https://chat-app-server-six-lac.vercel.app"
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
   <Provider store={store}>
