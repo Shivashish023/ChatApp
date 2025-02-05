@@ -6,7 +6,7 @@ const server = createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: ['https://chat-app-lime-pi-90.vercel.app/'], 
+        origin: ['http://localhost:5173'], 
         methods: ['GET', 'POST'],
     },
 });

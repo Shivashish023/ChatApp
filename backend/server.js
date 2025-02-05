@@ -10,7 +10,7 @@ import { app, server } from "./socket/socket.js";
 dotenv.config();
 
 const corsOptions = {
-    origin: 'https://chat-app-lime-pi-90.vercel.app/',
+    origin: 'http://localhost:5173',
     credentials: true,
 };
 

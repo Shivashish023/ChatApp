@@ -16,7 +16,7 @@ const handleCheckbox=(gender)=>{
 const handleSubmit= async(e)=>{
     e.preventDefault();
     try{
-        const response=await axios.post("https://chat-app-y4o3.vercel.app/api/user/register",user,{
+        const response=await axios.post("http://localhost:3000/api/user/register",user,{
             withCredentials:true
         });
       if(response.data.success){
