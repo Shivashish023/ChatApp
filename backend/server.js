@@ -25,7 +25,9 @@ const port = process.env.PORT || 3000;
 app.use("/api/user", userRouter);
 app.use("/api/message", messageRouter);
 
-
+app.get("/",(req,res)=>{
+  res.json("Server is running");
+})
 server.listen(port, () => {
     connectDB(); 
     console.log(`Server listening on port ${port} ...`);
