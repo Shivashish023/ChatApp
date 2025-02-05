@@ -10,7 +10,7 @@ import { app, server } from "./socket/socket.js";
 dotenv.config();
 
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin: 'https://chat-app-zeta-self.vercel.app/',
     credentials: true,
 };
 
