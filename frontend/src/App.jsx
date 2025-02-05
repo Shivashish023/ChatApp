@@ -34,7 +34,7 @@ const dispatch=useDispatch();
 const {socket}=useSelector(store=>store.socket)
  useEffect(() => {
   if(authUser){
-    const socketio=io('http://localhost:3000',{
+    const socketio=io('https://chat-app-server-six-lac.vercel.app/',{
       query:{
         userId:authUser._id
       }
