@@ -11,19 +11,23 @@ function OtherUser({user}) {
     }
     const isSelected= selectedUser && selectedUser._id===user._id;
   return (
-    <>
-        <div onClick={ () => selectedUserHandler(user)} className={`flex items-center  hover:bg-gray-700 ${isSelected?`bg-gray-700`:``} p-3  cursor-pointer`}>
-    <div className={`avatar ${isOnline?` online`:``} mr-2`}>
-        <div className='w-12 rounded-full'>
-            <img src={user.profilePhoto} alt="User  Avatar" />
+    <div 
+      onClick={() => selectedUserHandler(user)} 
+      className={`flex items-center hover:bg-gray-700 active:bg-gray-600 ${isSelected ? `bg-gray-700` : ``} p-2 sm:p-3 cursor-pointer transition-colors duration-200`}
+    >
+      <div className={`avatar ${isOnline ? `online` : ``} mr-2 sm:mr-3 flex-shrink-0`}>
+        <div className='w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden'>
+          <img 
+            src={user.profilePhoto} 
+            alt={`${user.name} avatar`}
+            className="w-full h-full object-cover"
+          />
         </div>
+      </div>
+      <div className="text-sm sm:text-base truncate flex-1">
+        {user.name}
+      </div>
     </div>
-    <div>
-     {user.name}
-    </div>
-</div>
-    
-    </>
   )
 }
 

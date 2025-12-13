@@ -38,26 +38,29 @@ const handleSubmit= async(e)=>{
     })
  }
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center text-black">Register</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 py-8">
+      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center text-black">Register</h2>
         <form onSubmit={handleSubmit} action="">
-          <div className="mb-6">
-              <input type="text"
+          <div className="mb-4">
+            <input 
+              type="text"
               value={user.name}
               autoComplete='off'
               onChange={(e) => setUser({ ...user, name: e.target.value })}
               placeholder="Name"
-              id="name" className="input input-bordered w-full max-w-xs bg-gray-100 text-black " />
+              id="name" 
+              className="input input-bordered w-full bg-gray-100 text-black text-sm sm:text-base" 
+            />
           </div>
 
-          <div className="mb-4 ">
-          <label className="input input-bordered flex items-center gap-2 bg-gray-100 text-black">
+          <div className="mb-4">
+            <label className="input input-bordered flex items-center gap-2 bg-gray-100 text-black text-sm sm:text-base">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
                 fill="currentColor"
-                className="h-4 w-4 opacity-70 text-black"
+                className="h-4 w-4 opacity-70 text-black flex-shrink-0"
               >
                 <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
               </svg>
@@ -73,13 +76,13 @@ const handleSubmit= async(e)=>{
             </label>
           </div>
 
-          <div className="mb-6">
-          <label className="input input-bordered flex items-center gap-2 bg-gray-100 text-black">
+          <div className="mb-4">
+            <label className="input input-bordered flex items-center gap-2 bg-gray-100 text-black text-sm sm:text-base">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
                 fill="currentColor"
-                className="h-4 w-4 opacity-70 text-black"
+                className="h-4 w-4 opacity-70 text-black flex-shrink-0"
               >
                 <path
                   fillRule="evenodd"
@@ -98,35 +101,40 @@ const handleSubmit= async(e)=>{
             </label>
           </div>
 
-          <div className="mb-6 flex gap-3">
+          <div className="mb-6 flex gap-4 sm:gap-3 justify-center sm:justify-start">
             <div className="flex items-center">
-              <p className='text-black'>Male:</p>
+              <p className='text-black text-sm sm:text-base mr-1'>Male:</p>
               <input 
-               checked={user.gender==="male"}
-               onChange={()=>handleCheckbox("male")}
-               type="checkbox" defaultChecked className="size-4 mx-1 bg-gray-100" />
+                checked={user.gender==="male"}
+                onChange={()=>handleCheckbox("male")}
+                type="radio" 
+                name="gender"
+                className="size-4 cursor-pointer" 
+              />
             </div>
             <div className="flex items-center">
-              <p className='text-black'>Female:</p>
+              <p className='text-black text-sm sm:text-base mr-1'>Female:</p>
               <input 
-              checked={user.gender==="female"}
-              onChange={()=>handleCheckbox("female")}
-              type="checkbox" defaultChecked className="size-4 mx-1" />
+                checked={user.gender==="female"}
+                onChange={()=>handleCheckbox("female")}
+                type="radio" 
+                name="gender"
+                className="size-4 cursor-pointer" 
+              />
             </div>
           </div>
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-200"
+            className="w-full bg-blue-500 text-white p-2.5 sm:p-2 rounded-md hover:bg-blue-600 active:bg-blue-700 transition duration-200 text-sm sm:text-base font-medium"
           >
-            {" "}
             Register
           </button>
         </form>
-        <p className="mt-4 text-center text-gray-500">
+        <p className="mt-4 text-center text-gray-500 text-sm sm:text-base">
           Already have an account?
           <Link to="/login">
-            <button className="text-blue-500 ml-1">Login</button>
+            <button className="text-blue-500 ml-1 hover:underline">Login</button>
           </Link>
         </p>
       </div>

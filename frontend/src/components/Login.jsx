@@ -38,17 +38,17 @@ function Login() {
     // })
   };
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center text-black">Login</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 py-8">
+      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center text-black">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="input input-bordered flex items-center gap-2 bg-gray-100 text-black text-base">
+            <label className="input input-bordered flex items-center gap-2 bg-gray-100 text-black text-sm sm:text-base">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
                 fill="currentColor"
-                className="h-4 w-4 opacity-70 text-black"
+                className="h-4 w-4 opacity-70 text-black flex-shrink-0"
               >
                 <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
               </svg>
@@ -58,19 +58,19 @@ function Login() {
                 onChange={(e) => setUser({ ...user, username: e.target.value })}
                 id="username"
                 autoComplete="off"
-                className="grow "
+                className="grow"
                 placeholder="Username"
               />
             </label>
           </div>
 
           <div className="mb-6">
-            <label className="input input-bordered flex items-center gap-2 bg-gray-100 text-black ">
+            <label className="input input-bordered flex items-center gap-2 bg-gray-100 text-black text-sm sm:text-base">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
                 fill="currentColor"
-                className="h-4 w-4 opacity-70 text-black"
+                className="h-4 w-4 opacity-70 text-black flex-shrink-0"
               >
                 <path
                   fillRule="evenodd"
@@ -90,15 +90,15 @@ function Login() {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-200"
+            className="w-full bg-blue-500 text-white p-2.5 sm:p-2 rounded-md hover:bg-blue-600 active:bg-blue-700 transition duration-200 text-sm sm:text-base font-medium"
           >
             Login
           </button>
         </form>
-        <p className="mt-4 text-center text-gray-500">
+        <p className="mt-4 text-center text-gray-500 text-sm sm:text-base">
           Don't have an account?
           <Link to="/register">
-            <button className="text-blue-500 ml-1">Register</button>
+            <button className="text-blue-500 ml-1 hover:underline">Register</button>
           </Link>
         </p>
       </div>
