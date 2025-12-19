@@ -8,24 +8,40 @@ import { MdAttachFile } from "react-icons/md";
 function SendInput() {
   const[message,setMessage]=useState("")
   const dispatch=useDispatch();
-  const {selectedUser}=useSelector(store=>store.user)
+  const {selectedUser, selectedGroup, chatType}=useSelector(store=>store.user)
   const {messages}=useSelector(store=>store.message);
 
   
   const submitHandler=async(e)=>{
     e.preventDefault();
-    if (!selectedUser ) {
-      console.error("No user selected");
-      return; // Exit the function if no user is selected
+    if (!selectedUser && !selectedGroup) {
+      console.error("No user or group selected");
+      return;
+    }
+    if (!message.trim()) {
+      return;
     }
    try{
-    const res=await axios.post(`${BASE_URL}/api/message/send/${selectedUser?._id}`,{message},
-      {
-        withCredentials:true,
-      });
+    let res;
+    if(chatType === "group"){
+      // Send group message
+      res = await axios.post(
+        `${BASE_URL}/api/message/send/${selectedGroup?._id}`,
+        {message, conversationId: selectedGroup?._id},
+        { withCredentials: true }
+      );
+    } else {
+      // Send 1-to-1 message
+      res = await axios.post(
+        `${BASE_URL}/api/message/send/${selectedUser?._id}`,
+        {message},
+        { withCredentials: true }
+      );
+    }
       console.log(res);
-      dispatch(setMessages([...messages,res?.data?.newMessage]))
-    
+      if(res?.data?.success && res?.data?.newMessage){
+        dispatch(setMessages([...messages,res.data.newMessage]))
+      }
    }
    catch(error){
     console.log(error);

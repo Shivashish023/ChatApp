@@ -15,7 +15,7 @@ import {
 } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
 import { setSocket } from './redux/socketSlice.js'
-import { setOnlineUsers } from './redux/userSlicer.js'
+import { setOnlineUsers, addGroup, removeGroup } from './redux/userSlicer.js'
 
 function App() {
 const dispatch=useDispatch();
@@ -44,6 +44,14 @@ const {socket}=useSelector(store=>store.socket)
 
     socketio?.on("getOnlineUsers",(onlineUsers)=>{
       dispatch(setOnlineUsers(onlineUsers));
+    });
+
+    socketio?.on("groupCreated",(group)=>{
+      dispatch(addGroup(group));
+    });
+
+    socketio?.on("groupDeleted",(data)=>{
+      dispatch(removeGroup(data.groupId));
     });
 
     return ()=>socketio.close();

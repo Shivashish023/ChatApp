@@ -5,6 +5,7 @@ import connectDB from "./config/database.js";
 import userRouter from "./routes/userRoute.js";
 import cookieParser from "cookie-parser";
 import messageRouter from "./routes/messageRoute.js";
+import groupRouter from "./routes/groupRoute.js";
 import { app, server } from "./socket/socket.js"; 
 
 dotenv.config();
@@ -24,6 +25,7 @@ const port = process.env.PORT || 3000;
 
 app.use("/api/user", userRouter);
 app.use("/api/message", messageRouter);
+app.use("/api/group", groupRouter);
 
 app.get("/",(req,res)=>{
   res.json("Server is running");

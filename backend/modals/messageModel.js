@@ -9,11 +9,21 @@ const messageModel= new mongoose.Schema({
     receiverId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
-        required:true
+        required:false
+    },
+    conversationId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Conversation",
+        required:false
     },
     message:{
         type:String,
         required:true
+    },
+    messageType:{
+        type:String,
+        enum:["text","image","file"],
+        default:"text"
     }
 },{timestamps:true});
 export const Message= mongoose.model("Message",messageModel);
