@@ -3,7 +3,6 @@ import { Conversation } from "../modals/roomModel.js";
 import { io } from "../socket/socket.js";
 import { getReceiverSocketId } from "../socket/socket.js";
 
-// Send message (supports both 1-to-1 and group)
 export const sendMessage= async(req,res)=>{
     try{
        let senderId=req.id;
@@ -13,9 +12,7 @@ export const sendMessage= async(req,res)=>{
        let gotConversation;
        let newMessage;
 
-       // Check if it's a group message (conversationId provided) or 1-to-1 (receiverId)
        if (conversationId) {
-           // Group message
            gotConversation = await Conversation.findById(conversationId);
            
            if (!gotConversation || !gotConversation.isGroup) {
@@ -25,7 +22,6 @@ export const sendMessage= async(req,res)=>{
                });
            }
 
-           // Verify sender is a participant
            const isParticipant = gotConversation.participants.some(
                p => p.toString() === senderId.toString()
            );
@@ -44,7 +40,6 @@ export const sendMessage= async(req,res)=>{
                messageType: "text"
            });
        } else {
-           // 1-to-1 message (existing logic)
            gotConversation = await Conversation.findOne({
                participants:{$all:[senderId,receiverId]},
                isGroup: false
@@ -71,12 +66,9 @@ export const sendMessage= async(req,res)=>{
        }
        await Promise.all([gotConversation.save(),newMessage.save()]);
 
-       // Populate sender for response
        await newMessage.populate("senderId", "name username profilePhoto");
 
-       // Emit Socket.IO event
        if (conversationId) {
-           // Group message - emit to all participants
            gotConversation.participants.forEach(participantId => {
                const socketId = getReceiverSocketId(participantId.toString());
                if (socketId) {
@@ -84,7 +76,6 @@ export const sendMessage= async(req,res)=>{
                }
            });
        } else {
-           // 1-to-1 message - emit to receiver only
            const receiverSocketId = getReceiverSocketId(receiverId);
            if(receiverSocketId){
                io.to(receiverSocketId).emit("newMessage", newMessage);
@@ -105,17 +96,15 @@ export const sendMessage= async(req,res)=>{
     }
 }
 
-// Get messages (supports both 1-to-1 and group)
 export const getMessage= async (req,res)=>{
     try{
         const senderId=req.id;
-        const receiverId=req.params.id; // Can be userId or conversationId
-        const { type } = req.query; // "user" or "group"
+        const receiverId=req.params.id;
+        const { type } = req.query;
 
         let conversation;
 
         if (type === "group") {
-            // Group messages
             conversation = await Conversation.findOne({
                 _id: receiverId,
                 isGroup: true,
@@ -135,7 +124,6 @@ export const getMessage= async (req,res)=>{
                 });
             }
         } else {
-            // 1-to-1 messages (existing logic)
             conversation = await Conversation.findOne({
                 participants:{$all:[senderId,receiverId]},
                 isGroup: false

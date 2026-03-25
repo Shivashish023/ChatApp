@@ -3,7 +3,6 @@ import { User } from "../modals/userModel.js";
 import { io } from "../socket/socket.js";
 import { getReceiverSocketId } from "../socket/socket.js";
 
-// Create a new group
 export const createGroup = async (req, res) => {
     try {
         const { groupName, description, participants } = req.body;
@@ -16,7 +15,6 @@ export const createGroup = async (req, res) => {
             });
         }
 
-        // Add creator to participants if not already included
         const allParticipants = [...new Set([creatorId, ...participants])];
 
         if (allParticipants.length < 2) {
@@ -26,7 +24,6 @@ export const createGroup = async (req, res) => {
             });
         }
 
-        // Verify all participants exist
         const users = await User.find({ _id: { $in: allParticipants } });
         if (users.length !== allParticipants.length) {
             return res.status(400).json({
@@ -35,7 +32,6 @@ export const createGroup = async (req, res) => {
             });
         }
 
-        // Create group conversation
         const group = await Conversation.create({
             participants: allParticipants,
             isGroup: true,
@@ -47,10 +43,8 @@ export const createGroup = async (req, res) => {
             messages: []
         });
 
-        // Populate participants for response
         await group.populate("participants", "name username profilePhoto");
 
-        // Emit socket event to all participants
         allParticipants.forEach(participantId => {
             const socketId = getReceiverSocketId(participantId.toString());
             if (socketId) {
@@ -71,7 +65,6 @@ export const createGroup = async (req, res) => {
     }
 };
 
-// Get all groups for the logged-in user
 export const getUserGroups = async (req, res) => {
     try {
         const userId = req.id;
@@ -98,7 +91,6 @@ export const getUserGroups = async (req, res) => {
     }
 };
 
-// Delete group
 export const deleteGroup = async (req, res) => {
     try {
         const { groupId } = req.params;
@@ -113,7 +105,6 @@ export const deleteGroup = async (req, res) => {
             });
         }
 
-        // Check if requester is admin
         if (group.admin.toString() !== requesterId) {
             return res.status(403).json({
                 success: false,
@@ -121,13 +112,10 @@ export const deleteGroup = async (req, res) => {
             });
         }
 
-        // Get participant IDs before deletion
         const participantIds = group.participants.map(p => p.toString());
 
-        // Delete the group
         await Conversation.findByIdAndDelete(groupId);
 
-        // Emit socket event to all participants
         participantIds.forEach(participantId => {
             const socketId = getReceiverSocketId(participantId);
             if (socketId) {

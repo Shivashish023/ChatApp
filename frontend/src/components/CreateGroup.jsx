@@ -13,6 +13,7 @@ function CreateGroup({ onClose }) {
     const [description, setDescription] = useState("");
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [brokenPhotoIds, setBrokenPhotoIds] = useState({});
 
     const handleToggleUser = (userId) => {
         if (selectedUsers.includes(userId)) {
@@ -120,11 +121,20 @@ function CreateGroup({ onClose }) {
                                             onChange={() => handleToggleUser(user._id)}
                                             className="mr-2"
                                         />
-                                        <img
-                                            src={user.profilePhoto}
-                                            alt={user.name}
-                                            className="w-8 h-8 rounded-full mr-2"
-                                        />
+                                        {user.profilePhoto && !brokenPhotoIds[user._id] ? (
+                                            <img
+                                                src={user.profilePhoto}
+                                                alt={user.name}
+                                                className="w-8 h-8 rounded-full mr-2"
+                                                onError={() =>
+                                                    setBrokenPhotoIds((prev) => ({ ...prev, [user._id]: true }))
+                                                }
+                                            />
+                                        ) : (
+                                            <span className="w-8 h-8 rounded-full mr-2 bg-gray-600 text-white flex items-center justify-center text-xs font-bold">
+                                                {(user?.name?.charAt(0) || "U").toUpperCase()}
+                                            </span>
+                                        )}
                                         <span className="text-black">{user.name}</span>
                                     </div>
                                 ))

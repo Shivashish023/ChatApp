@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setSelectedGroup, removeGroup } from '../redux/userSlicer';
 import axios from 'axios';
@@ -10,6 +10,11 @@ function GroupItem({group}) {
     const dispatch = useDispatch();
     const {selectedGroup, onlineUsers, authUser} = useSelector(store => store.user); 
     const [isDeleting, setIsDeleting] = useState(false);
+    const [avatarBroken, setAvatarBroken] = useState(false);
+
+    useEffect(() => {
+        setAvatarBroken(false);
+    }, [group?._id]);
     
     const selectedGroupHandler = (group) => { 
         dispatch(setSelectedGroup(group));
@@ -52,11 +57,12 @@ function GroupItem({group}) {
         >
             <div className="avatar mr-2 sm:mr-3 flex-shrink-0">
                 <div className='w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden bg-gray-600 flex items-center justify-center'>
-                    {group.groupPhoto ? (
+                    {group.groupPhoto && !avatarBroken ? (
                         <img 
                             src={group.groupPhoto} 
                             alt={`${group.groupName} avatar`}
                             className="w-full h-full object-cover"
+                            onError={() => setAvatarBroken(true)}
                         />
                     ) : (
                         <span className="text-white text-lg font-bold">

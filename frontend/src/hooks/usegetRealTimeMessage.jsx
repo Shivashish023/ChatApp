@@ -11,11 +11,22 @@ function usegetRealTimeMessage() {
   
   useEffect(() => {
     const handleNewMessage=(newMessage)=>{
-      // Check if message is for current chat
-      if(chatType==="group" && newMessage.conversationId === selectedGroup?._id){
-        dispatch(setMessages([...messages,newMessage]));
-      } else if(chatType==="user" && (newMessage.receiverId === selectedUser?._id || newMessage.senderId === selectedUser?._id)){
-        dispatch(setMessages([...messages,newMessage]));
+      const selectedUserId = selectedUser?._id?.toString();
+      const selectedGroupId = selectedGroup?._id?.toString();
+
+      if(chatType==="group" && newMessage?.conversationId?.toString() === selectedGroupId){
+        dispatch(setMessages([...messages, newMessage]));
+        return;
+      }
+
+      if(chatType==="user"){
+        const senderId = newMessage?.senderId?._id ?? newMessage?.senderId;
+        const senderIdStr = senderId?.toString?.() ?? senderId;
+        const receiverIdStr = newMessage?.receiverId?.toString?.() ?? newMessage?.receiverId;
+
+        if(senderIdStr === selectedUserId || receiverIdStr === selectedUserId){
+          dispatch(setMessages([...messages, newMessage]));
+        }
       }
     }
     

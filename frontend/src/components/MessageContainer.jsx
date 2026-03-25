@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import SendInput from './sendInput';
 import Messages from './Messages';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,7 +8,14 @@ import { IoArrowBackSharp } from "react-icons/io5";
 function MessageContainer() {
   const {selectedUser, selectedGroup, authUser, onlineUsers, chatType} = useSelector(store => store.user) 
   const dispatch = useDispatch();
+  const [userAvatarBroken, setUserAvatarBroken] = useState(false);
+  const [groupAvatarBroken, setGroupAvatarBroken] = useState(false);
   
+  useEffect(() => {
+    setUserAvatarBroken(false);
+    setGroupAvatarBroken(false);
+  }, [selectedUser?._id, selectedGroup?._id]);
+
   useEffect(() => {
     return () => {
       dispatch(setSelectedUser(null));
@@ -44,12 +51,23 @@ function MessageContainer() {
             {chatType === "user" ? (
               <>
                 <div className={`avatar ${isOnline ? `online` : ``}`}>
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden">
-                    <img 
-                      src={selectedUser?.profilePhoto} 
-                      alt="User Avatar" 
-                      className="w-full h-full object-cover" 
-                    />
+                  <div
+                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden ${
+                      selectedUser?.profilePhoto && !userAvatarBroken ? "" : "bg-gray-600 flex items-center justify-center"
+                    }`}
+                  >
+                    {selectedUser?.profilePhoto && !userAvatarBroken ? (
+                      <img
+                        src={selectedUser?.profilePhoto}
+                        alt="User Avatar"
+                        className="w-full h-full object-cover"
+                        onError={() => setUserAvatarBroken(true)}
+                      />
+                    ) : (
+                      <span className="text-white text-lg sm:text-xl font-bold">
+                        {(selectedUser?.name?.charAt(0) || "U").toUpperCase()}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="ml-2 sm:ml-4">
@@ -65,15 +83,16 @@ function MessageContainer() {
               <>
                 <div className="avatar">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden bg-gray-600 flex items-center justify-center">
-                    {selectedGroup?.groupPhoto ? (
-                      <img 
-                        src={selectedGroup.groupPhoto} 
-                        alt="Group Avatar" 
-                        className="w-full h-full object-cover" 
+                    {selectedGroup?.groupPhoto && !groupAvatarBroken ? (
+                      <img
+                        src={selectedGroup.groupPhoto}
+                        alt="Group Avatar"
+                        className="w-full h-full object-cover"
+                        onError={() => setGroupAvatarBroken(true)}
                       />
                     ) : (
                       <span className="text-white text-lg font-bold">
-                        {selectedGroup?.groupName?.charAt(0)?.toUpperCase() || 'G'}
+                        {(selectedGroup?.groupName?.charAt(0)?.toUpperCase() || "G").toString()}
                       </span>
                     )}
                   </div>
