@@ -66,7 +66,7 @@ export const sendMessage= async(req,res)=>{
        }
        await Promise.all([gotConversation.save(),newMessage.save()]);
 
-       await newMessage.populate("senderId", "name username profilePhoto");
+       await newMessage.populate("senderId", "name email profilePhoto");
 
        if (conversationId) {
            gotConversation.participants.forEach(participantId => {
@@ -113,7 +113,7 @@ export const getMessage= async (req,res)=>{
                 path: "messages",
                 populate: {
                     path: "senderId",
-                    select: "name username profilePhoto"
+                    select: "name email profilePhoto"
                 }
             });
 
@@ -131,7 +131,7 @@ export const getMessage= async (req,res)=>{
                 path: "messages",
                 populate: {
                     path: "senderId",
-                    select: "name username profilePhoto"
+                    select: "name email profilePhoto"
                 }
             });
         }

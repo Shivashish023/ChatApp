@@ -43,7 +43,7 @@ export const createGroup = async (req, res) => {
             messages: []
         });
 
-        await group.populate("participants", "name username profilePhoto");
+        await group.populate("participants", "name email profilePhoto");
 
         allParticipants.forEach(participantId => {
             const socketId = getReceiverSocketId(participantId.toString());
@@ -73,9 +73,9 @@ export const getUserGroups = async (req, res) => {
             isGroup: true,
             participants: userId
         })
-            .populate("participants", "name username profilePhoto")
-            .populate("admin", "name username profilePhoto")
-            .populate("createdBy", "name username profilePhoto")
+            .populate("participants", "name email profilePhoto")
+            .populate("admin", "name email profilePhoto")
+            .populate("createdBy", "name email profilePhoto")
             .sort({ updatedAt: -1 });
 
         return res.status(200).json({

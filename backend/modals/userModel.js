@@ -4,10 +4,12 @@ const userModel=new mongoose.Schema({
         type:String,
         required:true
     },
-    username:{
+    email:{
         type:String,
         required:true,
-        unique:true
+        unique:true,
+        lowercase:true,
+        trim:true
     },
     password:{
         type:String,
@@ -16,11 +18,6 @@ const userModel=new mongoose.Schema({
     profilePhoto:{
         type:String,
         default:""
-    },
-    gender:{
-        type:String,
-        enum:["male","female"],
-        required:true
     }
 
 });

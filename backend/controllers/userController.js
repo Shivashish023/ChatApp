@@ -4,26 +4,24 @@ import jwt from "jsonwebtoken";
 
 export  const register= async(req,res)=>{
     try{
-        const {name,username,password,gender}=req.body;
-        if(!name || !username ||!password || !gender){
+        const {name,email,password}=req.body;
+        if(!name || !email || !password){
             res.status(401).json({message:"All fields are required"});
         }
        
-        const user= await User.findOne({username});
+        const user= await User.findOne({email});
         if(user){
-            return res.status(401).json({success:false,message:"Username already exists,Try a different one"});
+            return res.status(401).json({success:false,message:"Email already exists, try a different one"});
          }
          const hashedPassword=await bcrypt.hash(password,10);
-const maleAvatar=`https://avatar.iran.liara.run/public/boy?username=${username}`;
-const femaleAvatar=`https://avatar.iran.liara.run/public/girl?username=${username}`
+const avatarUrl=`https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`;
          await User.create({
             name,
-            username,
+            email,
             password:hashedPassword,
-            profilePhoto:gender === "male" ? maleAvatar:femaleAvatar,
-            gender
+            profilePhoto:avatarUrl
          }) 
-         return res.status(201).json({ success:true,message: "User  registered successfully" });
+         return res.status(201).json({ success:true,message: "User registered successfully" });
     }
     catch(error){
         console.log(error);
@@ -32,14 +30,14 @@ const femaleAvatar=`https://avatar.iran.liara.run/public/girl?username=${usernam
 
 export const login= async(req,res)=>{
    try{
-    const {username,password}=req.body;
-    if(!username || !password){
+    const {email,password}=req.body;
+    if(!email || !password){
         res.status(401).json({message:"All fields required"});
     }
-    const user=await User.findOne({username});
+    const user=await User.findOne({email});
   if(!user){
     return res.status(401).json({
-        message:"Username not registered",
+        message:"Email not registered",
         success:false
     });
   }
@@ -56,7 +54,7 @@ export const login= async(req,res)=>{
  const token= jwt.sign(tokenData,process.env.JWT_SECRETKEY,{expiresIn:'1d'});
  return res.status(201).cookie("token",token,{maxAge:1*24*60*60*1000,httpOnly:true,sameSite:'strict' }).json({
      _id:user._id,
-    username:user.username,
+    email:user.email,
     name:user.name,
     profilePhoto:user.profilePhoto ,
   success:true

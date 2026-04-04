@@ -7,13 +7,9 @@ function Register() {
     const navigate=useNavigate();
 const [user, setUser] = useState({
     name:"",
-    username:"",
-    password:"",
-    gender:""
+    email:"",
+    password:""
 })
-const handleCheckbox=(gender)=>{
-    setUser({...user,gender})
-}
 const handleSubmit= async(e)=>{
     e.preventDefault();
     try{
@@ -32,9 +28,8 @@ const handleSubmit= async(e)=>{
     }
     setUser({
         name:"",
-    username:"",
-    password:"",
-    gender:""
+    email:"",
+    password:""
     })
  }
   return (
@@ -62,16 +57,17 @@ const handleSubmit= async(e)=>{
                 fill="currentColor"
                 className="h-4 w-4 opacity-70 text-black flex-shrink-0"
               >
-                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+                <path d="M1.5 2a.5.5 0 0 1 .5-.5h12a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-12a.5.5 0 0 1-.5-.5v-12ZM2 3v10h12V3H2Z" />
+                <path d="M3.5 5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v.5h-9V5Zm0 2h9v.5h-9V7Zm0 2h9v.5h-9V9Z" />
               </svg>
               <input
-                type="text"
-                value={user.username}
+                type="email"
+                value={user.email}
                 autoComplete='off'
-                onChange={(e) => setUser({ ...user, username: e.target.value })}
-                id="username"
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
+                id="email"
                 className="grow"
-                placeholder="Username"
+                placeholder="Email"
               />
             </label>
           </div>
@@ -99,29 +95,6 @@ const handleSubmit= async(e)=>{
                 placeholder="Password"
               />
             </label>
-          </div>
-
-          <div className="mb-6 flex gap-4 sm:gap-3 justify-center sm:justify-start">
-            <div className="flex items-center">
-              <p className='text-black text-sm sm:text-base mr-1'>Male:</p>
-              <input 
-                checked={user.gender==="male"}
-                onChange={()=>handleCheckbox("male")}
-                type="radio" 
-                name="gender"
-                className="size-4 cursor-pointer" 
-              />
-            </div>
-            <div className="flex items-center">
-              <p className='text-black text-sm sm:text-base mr-1'>Female:</p>
-              <input 
-                checked={user.gender==="female"}
-                onChange={()=>handleCheckbox("female")}
-                type="radio" 
-                name="gender"
-                className="size-4 cursor-pointer" 
-              />
-            </div>
           </div>
 
           <button
