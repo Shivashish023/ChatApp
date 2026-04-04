@@ -30,7 +30,7 @@ app.use("/api/group", groupRouter);
 app.get("/",(req,res)=>{
   res.json("Server is running");
 })
-server.listen(port, () => {
-    connectDB(); 
-    console.log(`Server listening on port ${port} ...`);
-});
+
+connectDB();
+
+export default app;
