@@ -11,7 +11,7 @@ import { app, server } from "./socket/socket.js";
 dotenv.config();
 
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
     credentials: true,
 };
 
