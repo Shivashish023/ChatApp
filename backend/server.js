@@ -27,7 +27,6 @@ app.use("/api/message", messageRouter);
 app.use("/api/group", groupRouter);
 
 app.get("/", (req, res) => {
-app.get("/", (req, res) => {
   res.json("Server is running");
 });
 
