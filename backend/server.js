@@ -27,10 +27,21 @@ app.use("/api/user", userRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/group", groupRouter);
 
-app.get("/",(req,res)=>{
+app.get("/", (req, res) => {
   res.json("Server is running");
-})
+});
 
-connectDB();
+const startServer = async () => {
+  try {
+    await connectDB();
+    server.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+  }
+};
+
+startServer();
 
 export default app;

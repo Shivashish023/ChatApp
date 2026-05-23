@@ -1,7 +1,5 @@
-import { useState,useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
-import profimg from "./assets/profimg.webp"
-import axios from "axios"
 import Register from "./components/Register.jsx"
 import Home from './components/Home.jsx'
 import Login from './components/Login.jsx'
@@ -14,64 +12,57 @@ import {
   Route,
 } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
-import { setSocket } from './redux/socketSlice.js'
+import SocketContext from './context/SocketContext.jsx'
 import { setOnlineUsers, addGroup, removeGroup } from './redux/userSlicer.js'
 
 function App() {
-const dispatch=useDispatch();
- const router=createBrowserRouter(
-  createRoutesFromElements(
-    <Route path='/'>
-      <Route index element={<Login />} />
-       <Route path="/login" element={<Login/>}/>
-       <Route path="/register" element={<Register/>}/>
-       <Route path="/home" element={<Home/>}/>
+  const dispatch = useDispatch();
+  const [socket, setSocket] = useState(null);
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path='/'>
+        <Route index element={<Login />} />
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/register" element={<Register/>}/>
+        <Route path="/home" element={<Home/>}/>
       </Route>
-   
+    )
   )
- )
 
- const {authUser}=useSelector(store=>store.user);
-const {socket}=useSelector(store=>store.socket)
- useEffect(() => {
-  if(authUser){
-    const socketio=io(`${BASE_URL}`,{
-      query:{
-        userId:authUser._id
+  const { authUser } = useSelector(store => store.user);
+
+  useEffect(() => {
+    if (!authUser) return;
+
+    const socketio = io(`${BASE_URL}`, {
+      query: {
+        userId: authUser._id
       }
     });
-    dispatch(setSocket(socketio));
+    setSocket(socketio);
 
-    socketio?.on("getOnlineUsers",(onlineUsers)=>{
+    socketio.on("getOnlineUsers", (onlineUsers) => {
       dispatch(setOnlineUsers(onlineUsers));
     });
 
-    socketio?.on("groupCreated",(group)=>{
+    socketio.on("groupCreated", (group) => {
       dispatch(addGroup(group));
     });
 
-    socketio?.on("groupDeleted",(data)=>{
+    socketio.on("groupDeleted", (data) => {
       dispatch(removeGroup(data.groupId));
     });
 
-    return ()=>socketio.close();
-  }
-  else{
-    if(socket){
-      socket.close();
-      dispatch(setSocket(null ))
-    }
-  } 
-  
- }, [authUser]);
- 
- 
+    return () => {
+      socketio.close();
+      setSocket(null);
+    };
+  }, [authUser, dispatch]);
 
   return (
-    <div>
+    <SocketContext.Provider value={socket}>
       <RouterProvider router={router}/>
-    </div>
- 
+    </SocketContext.Provider>
   )
 }
 

@@ -2,9 +2,10 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setMessages } from '../redux/messageSlice';
 import { useEffect } from 'react';
+import { useSocket } from '../context/SocketContext.jsx';
 
 function usegetRealTimeMessage() {
-  const {socket}=useSelector(store=>store.socket);
+  const socket = useSocket();
   const {messages}=useSelector(store=>store.message);
   const {selectedUser, selectedGroup, chatType}=useSelector(store=>store.user);
   const dispatch=useDispatch();

@@ -21,16 +21,16 @@ const handleSubmit= async(e)=>{
             toast.success(response.data.message);
       }  
     
-    }catch(error){
-        toast.error(error.response.data.message);
-        console.log(error);
-      
+    } catch (error) {
+      const message = error?.response?.data?.message || error?.message || "Something went wrong";
+      toast.error(message);
+      console.log(error);
     }
     setUser({
-        name:"",
-    email:"",
-    password:""
-    })
+      name: "",
+      email: "",
+      password: "",
+    });
  }
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 py-8">

@@ -5,11 +5,11 @@ import jwt from "jsonwebtoken";
 export  const register= async(req,res)=>{
     try{
         const {name,email,password}=req.body;
-        if(!name || !email || !password){
-            res.status(401).json({message:"All fields are required"});
-        }
-       
-        const user= await User.findOne({email});
+        if (!name || !email || !password) {
+      return res.status(401).json({ success: false, message: "All fields are required" });
+    }
+
+    const user = await User.findOne({ email });
         if(user){
             return res.status(401).json({success:false,message:"Email already exists, try a different one"});
          }
@@ -25,16 +25,24 @@ const avatarUrl=`https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`;
     }
     catch(error){
         console.log(error);
+        if (error.code === 11000) {
+            const field = Object.keys(error.keyValue || {})[0] || "field";
+            return res.status(409).json({
+                success: false,
+                message: `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`,
+            });
+        }
+        return res.status(500).json({ success: false, message: "Internal server error" });
     }
 }
 
 export const login= async(req,res)=>{
    try{
     const {email,password}=req.body;
-    if(!email || !password){
-        res.status(401).json({message:"All fields required"});
+    if (!email || !password) {
+      return res.status(401).json({ success: false, message: "All fields required" });
     }
-    const user=await User.findOne({email});
+    const user = await User.findOne({ email });
   if(!user){
     return res.status(401).json({
         message:"Email not registered",
@@ -62,6 +70,7 @@ export const login= async(req,res)=>{
    }
    catch(error){
     console.log(error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
    }
 }
 
@@ -81,7 +90,8 @@ export const getOtherUsers=async(req,res)=>{
         const loggedInUserId=req.id;
         const otherUsers=await User.find({_id:{$ne:loggedInUserId}}).select("-password");
         return res.status(200).json(otherUsers);
-    }catch(error){
+    } catch (error) {
         console.log(error);
+        return res.status(500).json({ success: false, message: "Internal server error" });
     }
 }
