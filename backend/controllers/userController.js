@@ -60,7 +60,7 @@ export const login= async(req,res)=>{
     userId:user._id
  }
  const token= jwt.sign(tokenData,process.env.JWT_SECRETKEY,{expiresIn:'1d'});
- return res.status(201).cookie("token",token,{maxAge:1*24*60*60*1000,httpOnly:true,sameSite:'strict' }).json({
+ return res.status(201).cookie("token",token,{maxAge:1*24*60*60*1000,httpOnly:true,sameSite:'none',secure:true}).json({
      _id:user._id,
     email:user.email,
     name:user.name,
@@ -76,12 +76,13 @@ export const login= async(req,res)=>{
 
 export const logout= (req,res)=>{
     try{
-        return res.status(201).cookie("token","",{maxAge:0}).json({
+        return res.status(201).cookie("token","",{maxAge:0,sameSite:'none',secure:true}).json({
             message:"User logged  out succesfully"
         })
     }
     catch(error){
         console.log(error);
+        return res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
 

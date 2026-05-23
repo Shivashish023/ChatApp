@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
 import axios from 'axios'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setOtherUsers } from '../redux/userSlicer';
 import { BASE_URL } from '../main';
 const useGetOtherUsers = () => {
     const dispatch=useDispatch();
+    const { onlineUsers } = useSelector(store => store.user);
+    
    useEffect(() => {
    
         const fetchOtherUsers=async()=>{
@@ -20,7 +22,7 @@ const useGetOtherUsers = () => {
     }
 }
 fetchOtherUsers();
-   }, [])
+   }, [dispatch, onlineUsers])
    
 }
 
