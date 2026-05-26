@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import OtherUsers from './OtherUsers'
 import GroupList from './GroupList'
 import CreateGroup from './CreateGroup'
@@ -8,129 +8,136 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAuthUser, setOtherUsers } from '../redux/userSlicer'
 import { BASE_URL } from '../main.jsx'
+import { HiOutlineSearch, HiOutlineLogout } from 'react-icons/hi'
+import { IoPeople, IoChatbubbles } from 'react-icons/io5'
 
 function Sidebar() {
-  const dispatch=useDispatch();
-  const navigate=useNavigate();
-  const{otherUsers}=useSelector(store=>store.user);
-  const [search,setSearch]=useState("");
-  const [activeTab, setActiveTab] = useState("users"); // "users" or "groups"
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { otherUsers, authUser } = useSelector(store => store.user);
+  const [search, setSearch] = useState("");
+  const [activeTab, setActiveTab] = useState("users");
   const [showCreateGroup, setShowCreateGroup] = useState(false);
-  
-  const searchSubmitHandler=(e)=>{
+  const [avatarBroken, setAvatarBroken] = useState(false);
+
+  useEffect(() => {
+    setAvatarBroken(false);
+  }, [authUser?._id]);
+
+  const searchSubmitHandler = (e) => {
     e.preventDefault();
-    if(activeTab === "users"){
-      const  searchedUser=otherUsers?.find((user)=>user.name.toLowerCase().includes(search.toLowerCase()));
-      
-      if(searchedUser){
+    if (activeTab === "users") {
+      const searchedUser = otherUsers?.find((user) =>
+        user.name.toLowerCase().includes(search.toLowerCase())
+      );
+      if (searchedUser) {
         dispatch(setOtherUsers([searchedUser]))
-      }
-      else{
+      } else {
         toast.error("User not found!");
       }
     } else {
-      // Group search can be implemented later
       toast.error("Group search coming soon!");
     }
   }
-  
-  const handleLogout= async()=>{
-    try{
-      const res= await axios.get(`${BASE_URL}/api/user/logout`, {
+
+  const handleLogout = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/api/user/logout`, {
         withCredentials: true
       });
       navigate("/login");
       toast.success(res.data.message);
       dispatch(setAuthUser(null));
-    }
-    catch(error){
+    } catch (error) {
       console.log(error);
     }
   }
-  
+
+  const userInitial = (authUser?.name?.charAt(0) || "U").toUpperCase();
+
   return (
-    <div className="w-full h-screen bg-gray-800 text-white p-2 sm:p-4 flex flex-col">
+    <div className="sidebar-panel p-4">
+      {/* Brand + user */}
+      <div className="mb-5 flex items-center gap-3">
+        <div className="avatar-ring flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-chap-500 to-indigo-600">
+          {authUser?.profilePhoto && !avatarBroken ? (
+            <img
+              src={authUser.profilePhoto}
+              alt=""
+              className="h-full w-full object-cover"
+              onError={() => setAvatarBroken(true)}
+            />
+          ) : (
+            <span className="text-lg font-bold text-white">{userInitial}</span>
+          )}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-semibold text-white">{authUser?.name || "User"}</p>
+          <p className="truncate text-xs text-slate-400">{authUser?.email}</p>
+        </div>
+      </div>
+
       {/* Tabs */}
-      <div className="flex mb-2 sm:mb-4 border-b border-gray-700">
+      <div className="mb-4 flex gap-1 rounded-xl bg-white/5 p-1">
         <button
+          type="button"
           onClick={() => setActiveTab("users")}
-          className={`flex-1 px-2 py-2 text-sm sm:text-base font-medium ${
-            activeTab === "users"
-              ? "border-b-2 border-blue-500 text-blue-400"
-              : "text-gray-400 hover:text-gray-200"
+          className={`sidebar-tab flex items-center justify-center gap-1.5 ${
+            activeTab === "users" ? "sidebar-tab-active" : "sidebar-tab-inactive"
           }`}
         >
+          <IoPeople className="h-4 w-4" />
           Users
         </button>
         <button
+          type="button"
           onClick={() => setActiveTab("groups")}
-          className={`flex-1 px-2 py-2 text-sm sm:text-base font-medium ${
-            activeTab === "groups"
-              ? "border-b-2 border-blue-500 text-blue-400"
-              : "text-gray-400 hover:text-gray-200"
+          className={`sidebar-tab flex items-center justify-center gap-1.5 ${
+            activeTab === "groups" ? "sidebar-tab-active" : "sidebar-tab-inactive"
           }`}
         >
+          <IoChatbubbles className="h-4 w-4" />
           Groups
         </button>
       </div>
 
       {/* Search */}
-      <form action="" onSubmit={searchSubmitHandler} className="px-2 mb-2">
-        <div className="input input-bordered flex items-center gap-2 bg-gray-700 text-sm sm:text-base min-w-0">
-          <input 
+      <form onSubmit={searchSubmitHandler} className="mb-3">
+        <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 focus-within:border-chap-500/50 focus-within:ring-1 focus-within:ring-chap-500/30">
+          <HiOutlineSearch className="h-5 w-5 shrink-0 text-slate-400" />
+          <input
             type="text"
-            className="grow min-w-0 flex-1"
+            className="min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-slate-500 focus:outline-none"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder={activeTab === "users" ? "Search users" : "Search groups"}
+            placeholder={activeTab === "users" ? "Search users…" : "Search groups…"}
           />
-          <button 
-            type='submit' 
-            className="flex-shrink-0 p-1 transform transition-transform duration-200 hover:scale-110 active:scale-95 flex items-center justify-center"
-            aria-label="Search"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              className="h-4 w-4 sm:h-5 sm:w-5 opacity-70 flex-shrink-0">
-              <path
-                fillRule="evenodd"
-                d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                clipRule="evenodd" />
-            </svg>
-          </button>
         </div>
       </form>
 
-      {/* Create Group Button (only show in groups tab) */}
       {activeTab === "groups" && (
-        <div className="px-2 mb-2">
-          <button
-            onClick={() => setShowCreateGroup(true)}
-            className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-medium py-2 px-4 rounded transition duration-300 ease-in-out text-sm sm:text-base"
-          >
-            + Create Group
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => setShowCreateGroup(true)}
+          className="mb-3 w-full rounded-xl bg-gradient-to-r from-chap-600 to-indigo-600 py-2.5 text-sm font-semibold text-white shadow-md transition hover:from-chap-500 hover:to-indigo-500"
+        >
+          + New group
+        </button>
       )}
 
-      {/* Content */}
-      <div className='flex-1 overflow-auto rounded-lg border border-gray-700 mb-2 sm:mb-4'>
+      <div className="scrollbar-thin flex-1 overflow-y-auto rounded-xl border border-white/5 bg-black/20">
         {activeTab === "users" ? <OtherUsers /> : <GroupList />}
       </div>
 
-      {/* Logout */}
-      <div className="px-2 pb-2 sm:pb-4">
-        <button 
-          onClick={handleLogout} 
-          className="w-full sm:w-auto bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold py-2 px-4 sm:px-3 rounded transition duration-300 ease-in-out text-sm sm:text-base"
-        >
-          Logout
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={handleLogout}
+        className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 py-2.5 text-sm font-medium text-red-300 transition hover:bg-red-500/20"
+      >
+        <HiOutlineLogout className="h-5 w-5" />
+        Log out
+      </button>
 
-      {/* Create Group Modal */}
       {showCreateGroup && (
         <CreateGroup onClose={() => setShowCreateGroup(false)} />
       )}

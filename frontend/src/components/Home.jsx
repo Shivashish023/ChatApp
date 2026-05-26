@@ -2,17 +2,21 @@ import React from 'react'
 import Sidebar from './Sidebar'
 import MessageContainer from './MessageContainer'
 import { useSelector } from 'react-redux'
+
 function Home() {
-  const {selectedUser, selectedGroup}=useSelector(store=>store.user);
+  const { selectedUser, selectedGroup } = useSelector(store => store.user);
   const hasSelection = selectedUser !== null || selectedGroup !== null;
+
   return (
-    <div className="flex flex-col md:flex-row h-screen overflow-hidden">
-      {/* Sidebar - Hidden on mobile when user/group is selected, visible on desktop */}
-      <div className={`w-full md:w-1/4 lg:w-1/5 bg-gray-800 text-white ${hasSelection ? "hidden md:block" : "block"}`}>
+    <div className="flex h-screen overflow-hidden bg-slate-100">
+      <div
+        className={`w-full border-r border-slate-800/50 md:w-[320px] lg:w-[360px] ${
+          hasSelection ? "hidden md:flex md:flex-col" : "flex flex-col"
+        }`}
+      >
         <Sidebar />
       </div>
-      {/* Message Container - Full width on mobile, flex-grow on desktop */}
-      <div className={`flex-grow bg-gray-200 ${hasSelection ? "block" : "hidden md:block"}`}>
+      <div className={`min-w-0 flex-1 ${hasSelection ? "flex flex-col" : "hidden md:flex md:flex-col"}`}>
         <MessageContainer />
       </div>
     </div>

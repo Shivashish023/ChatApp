@@ -1,113 +1,117 @@
 import React, { useState } from 'react'
-import { Link,useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import {toast,Toaster} from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { BASE_URL } from '../main';
+import { HiOutlineUser, HiOutlineMail, HiOutlineLockClosed } from "react-icons/hi";
+
 function Register() {
-    const navigate=useNavigate();
-const [user, setUser] = useState({
-    name:"",
-    email:"",
-    password:""
-})
-const handleSubmit= async(e)=>{
+  const navigate = useNavigate();
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    password: ""
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
-        const response=await axios.post(`${BASE_URL}/api/user/register`,user,{
-            withCredentials:true
-        });
-      if(response.data.success){
+    setLoading(true);
+    try {
+      const response = await axios.post(`${BASE_URL}/api/user/register`, user, {
+        withCredentials: true
+      });
+      if (response.data.success) {
         navigate("/login");
-            toast.success(response.data.message);
-      }  
-    
+        toast.success(response.data.message);
+      }
     } catch (error) {
       const message = error?.response?.data?.message || error?.message || "Something went wrong";
       toast.error(message);
       console.log(error);
+    } finally {
+      setLoading(false);
     }
-    setUser({
-      name: "",
-      email: "",
-      password: "",
-    });
- }
+    setUser({ name: "", email: "", password: "" });
+  }
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 py-8">
-      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center text-black">Register</h2>
-        <form onSubmit={handleSubmit} action="">
-          <div className="mb-4">
-            <input 
-              type="text"
-              value={user.name}
-              autoComplete='off'
-              onChange={(e) => setUser({ ...user, name: e.target.value })}
-              placeholder="Name"
-              id="name" 
-              className="input input-bordered w-full bg-gray-100 text-black text-sm sm:text-base" 
-            />
+    <div className="auth-shell">
+      <div className="auth-card">
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-chap-500 to-indigo-600 text-2xl font-bold text-white shadow-lg">
+            C
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Create account</h1>
+          <p className="mt-1 text-sm text-slate-500">Join CHAP and start chatting</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-slate-700">
+              Full name
+            </label>
+            <div className="auth-input-group">
+              <HiOutlineUser className="h-5 w-5 shrink-0 text-slate-400" />
+              <input
+                type="text"
+                id="name"
+                value={user.name}
+                autoComplete="name"
+                onChange={(e) => setUser({ ...user, name: e.target.value })}
+                className="min-w-0 flex-1 bg-transparent text-slate-800 placeholder:text-slate-400 focus:outline-none"
+                placeholder="Your name"
+                required
+              />
+            </div>
           </div>
 
-          <div className="mb-4">
-            <label className="input input-bordered flex items-center gap-2 bg-gray-100 text-black text-sm sm:text-base">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                className="h-4 w-4 opacity-70 text-black flex-shrink-0"
-              >
-                <path d="M1.5 2a.5.5 0 0 1 .5-.5h12a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-12a.5.5 0 0 1-.5-.5v-12ZM2 3v10h12V3H2Z" />
-                <path d="M3.5 5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v.5h-9V5Zm0 2h9v.5h-9V7Zm0 2h9v.5h-9V9Z" />
-              </svg>
+          <div>
+            <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-700">
+              Email
+            </label>
+            <div className="auth-input-group">
+              <HiOutlineMail className="h-5 w-5 shrink-0 text-slate-400" />
               <input
                 type="email"
-                value={user.email}
-                autoComplete='off'
-                onChange={(e) => setUser({ ...user, email: e.target.value })}
                 id="email"
-                className="grow"
-                placeholder="Email"
+                value={user.email}
+                autoComplete="email"
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
+                className="min-w-0 flex-1 bg-transparent text-slate-800 placeholder:text-slate-400 focus:outline-none"
+                placeholder="you@example.com"
+                required
               />
-            </label>
+            </div>
           </div>
 
-          <div className="mb-4">
-            <label className="input input-bordered flex items-center gap-2 bg-gray-100 text-black text-sm sm:text-base">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                className="h-4 w-4 opacity-70 text-black flex-shrink-0"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-                  clipRule="evenodd"
-                />
-              </svg>
+          <div>
+            <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-slate-700">
+              Password
+            </label>
+            <div className="auth-input-group">
+              <HiOutlineLockClosed className="h-5 w-5 shrink-0 text-slate-400" />
               <input
                 type="password"
+                id="password"
                 value={user.password}
                 onChange={(e) => setUser({ ...user, password: e.target.value })}
-                id="password"
-                className="grow"
-                placeholder="Password"
+                className="min-w-0 flex-1 bg-transparent text-slate-800 placeholder:text-slate-400 focus:outline-none"
+                placeholder="••••••••"
+                required
               />
-            </label>
+            </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white p-2.5 sm:p-2 rounded-md hover:bg-blue-600 active:bg-blue-700 transition duration-200 text-sm sm:text-base font-medium"
-          >
-            Register
+          <button type="submit" disabled={loading} className="btn-primary mt-2">
+            {loading ? "Creating account…" : "Create account"}
           </button>
         </form>
-        <p className="mt-4 text-center text-gray-500 text-sm sm:text-base">
-          Already have an account?
-          <Link to="/login">
-            <button className="text-blue-500 ml-1 hover:underline">Login</button>
+
+        <p className="mt-6 text-center text-sm text-slate-500">
+          Already have an account?{" "}
+          <Link to="/login" className="font-semibold text-chap-600 hover:text-chap-500 hover:underline">
+            Sign in
           </Link>
         </p>
       </div>

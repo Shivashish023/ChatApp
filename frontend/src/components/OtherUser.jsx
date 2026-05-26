@@ -1,46 +1,48 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setSelectedUser } from '../redux/userSlicer';
-function OtherUser({user}) {
-    const dispatch=useDispatch();
-    const {selectedUser,onlineUsers,authUser}=useSelector(store=>store.user); 
-        const isOnline=onlineUsers.includes(user._id)
-    const [avatarBroken, setAvatarBroken] = useState(false);
-    
-    useEffect(() => {
-      setAvatarBroken(false);
-    }, [user?._id]);
-    
-    const selectedUserHandler=(user)=>{ 
-        dispatch(setSelectedUser(user));
-    }
-    const isSelected= selectedUser && selectedUser._id===user._id;
-    const senderInitial = (user?.name?.charAt(0) || "U").toUpperCase();
+
+function OtherUser({ user }) {
+  const dispatch = useDispatch();
+  const { selectedUser, onlineUsers } = useSelector(store => store.user);
+  const isOnline = onlineUsers.includes(user._id)
+  const [avatarBroken, setAvatarBroken] = useState(false);
+
+  useEffect(() => {
+    setAvatarBroken(false);
+  }, [user?._id]);
+
+  const selectedUserHandler = (user) => {
+    dispatch(setSelectedUser(user));
+  }
+  const isSelected = selectedUser && selectedUser._id === user._id;
+  const senderInitial = (user?.name?.charAt(0) || "U").toUpperCase();
+
   return (
-    <div 
-      onClick={() => selectedUserHandler(user)} 
-      className={`flex items-center hover:bg-gray-700 active:bg-gray-600 ${isSelected ? `bg-gray-700` : ``} p-2 sm:p-3 cursor-pointer transition-colors duration-200`}
+    <div
+      onClick={() => selectedUserHandler(user)}
+      className={`list-item m-1 ${isSelected ? "list-item-selected" : ""}`}
     >
-      <div className={`avatar ${isOnline ? `online` : ``} mr-2 sm:mr-3 flex-shrink-0`}>
-        <div
-          className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden ${
-            user?.profilePhoto && !avatarBroken ? "" : "bg-gray-600 flex items-center justify-center"
-          }`}
-        >
+      <div className="relative shrink-0">
+        <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-slate-700">
           {user?.profilePhoto && !avatarBroken ? (
             <img
               src={user.profilePhoto}
-              alt={`${user.name} avatar`}
-              className="w-full h-full object-cover"
+              alt=""
+              className="h-full w-full object-cover"
               onError={() => setAvatarBroken(true)}
             />
           ) : (
-            <span className="text-white text-lg sm:text-xl font-bold">{senderInitial}</span>
+            <span className="text-sm font-bold text-white">{senderInitial}</span>
           )}
         </div>
+        {isOnline && (
+          <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-slate-900 bg-emerald-500" />
+        )}
       </div>
-      <div className="text-sm sm:text-base truncate flex-1">
-        {user.name}
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium text-white">{user.name}</p>
+        <p className="text-xs text-slate-400">{isOnline ? "Online" : "Offline"}</p>
       </div>
     </div>
   )
